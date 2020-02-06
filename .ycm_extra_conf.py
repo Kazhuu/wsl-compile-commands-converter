@@ -1,20 +1,55 @@
 import subprocess
+import re
+import json
 
 
-def Settings( **kwargs ):
-    print(kwargs['filename'])
-    if kwargs[ 'language' ] == 'cfamily':
-        print('cfamily')
+COMPILE_COMMANDS_JSON_FILENAME = 'compile_commands.json'
+
+
+def read_compile_commands(filename):
+    database = None
+    with open(COMPILE_COMMANDS_JSON_FILENAME, 'r') as compile_commands:
+        database = json.loads(compile_commands.read())
+    result = {}
+    for data in database:
+        filename = wsl_path(data['file'])
+        result[filename] = data['command']
+    return result
+
+
+def remove_compile_flags(command):
+    o_pattern = r'-o\s*[\w\/\.]+'
+    c_pattern = r'-c\s*[\w\/\.]+'
+    command = re.sub(o_pattern, '', command)
+    command = re.sub(c_pattern, '', command)
+    return command
+
+
+def replace_path(path):
+    return wsl_path(path.group(1))
+
+
+def convert_paths(command):
+    path_pattern = r'((\w\:|)?[\/\\][^\s]+)'
+    return re.sub(path_pattern, replace_path, command)
 
 
 def wsl_path(windows_path):
-    completed_process = subprocess.run(['wslpath', '-a', windows_path], check=True)
-    return completed_process.stdout
+    completed_process = subprocess.run(['wslpath', '-a', windows_path], check=True, stdout=subprocess.PIPE)
+    return completed_process.stdout.decode('ascii').strip()
 
-def main():
-    command = "C:\\tools\\mingw64\\8.1.0\\bin\\c++.exe  -DVBOOT_FLASH_LAYOUT -D__DVPS__ -IC:/dev/product/product/controlboard/core0/../../../sw/firmware -IC:/ProgramData/chocolatey/lib/winpcap-developers-pack/tools/WpdPack/Include -IC:/dev/product/ext/googletest/googlemock/include -IC:/dev/product/ext/googletest/googlemock -IC:/dev/product/ext/googletest/googletest/include -IC:/dev/product/ext/googletest/googletest -isystem C:/tools/boost_1_62_0   -DGSL_THROW_ON_CONTRACT_VIOLATION -Wall -ftrack-macro-expansion=0 -Wno-stringop-truncation -Werror -std=gnu++14 -DTARGET_LITTLE_ENDIAN=1234 -D _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING -D _SILENCE_FPOS_SEEKPOS_DEPRECATION_WARNING   -g  -Og -fdata-sections -ffunction-sections -g3  -Wno-psabi -Wno-error=parentheses -Wno-parentheses  -faligned-new     -DGSL_THROW_ON_CONTRACT_VIOLATION -Wall -ftrack-macro-expansion=0 -Wno-stringop-truncation -Werror -std=gnu++14 -DTARGET_LITTLE_ENDIAN=1234 -D _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING -D _SILENCE_FPOS_SEEKPOS_DEPRECATION_WARNING -Wall -Wshadow -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o ext\\googletest\\build\\googlemock\\CMakeFiles\\gmock_main.dir\\__\\googletest\\src\\gtest-all.cc.obj -c C:\\dev\\product\\ext\\googletest\\googletest\\src\\gtest-all.cc"
-    print(wsl_path('C:\\tools\\mingw64\\8.1.0\\bin\\c++.exe'))
 
+def Settings(**kwargs):
+    filename = kwargs.get('filename', '')
+    if filename in database:
+        return {
+            'flags': convert_paths(remove_compile_flags(database[filename])).split(' ')
+        }
+    return {}
+
+
+database = read_compile_commands(COMPILE_COMMANDS_JSON_FILENAME)
+print('done')
 
 if __name__ == '__main__':
-    main()
+    Settings()
