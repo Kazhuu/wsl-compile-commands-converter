@@ -5,7 +5,7 @@ import json
 
 
 def convert_paths(command):
-    path_pattern = r'((\w\:|\/)?[\/\\][^(\s|")]+)'
+    path_pattern = r'[I| |"](\w+:?(?:[\\|\/]+[\w\.-]+)+)'
     return re.sub(path_pattern, replace_path, command)
 
 
