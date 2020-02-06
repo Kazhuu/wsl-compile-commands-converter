@@ -1,9 +1,25 @@
 import subprocess
 import re
 import json
+import os
 
 
-COMPILE_COMMANDS_JSON_FILENAME = 'compile_commands.json'
+COMPILE_COMMANDS_JSON_FILENAME = 'win_compile_commands.json'
+SOURCE_EXTENSIONS = ['.cpp', '.cxx', '.cc', '.c', '.m', '.mm']
+
+def IsHeaderFile(filename):
+    extension = os.path.splitext(filename)[1]
+    return extension in ['.h', '.hxx', '.hpp', '.hh']
+
+
+def find_corresponding_source_file(filename):
+    if IsHeaderFile(filename):
+        basename = os.path.splitext(filename)[0]
+        for extension in SOURCE_EXTENSIONS:
+            replacement_file = basename + extension
+            if os.path.exists(replacement_file):
+                return replacement_file
+    return filename
 
 
 def read_compile_commands(filename):
@@ -41,10 +57,13 @@ def wsl_path(windows_path):
 
 def Settings(**kwargs):
     filename = kwargs.get('filename', '')
+    filename = find_corresponding_source_file(filename)
     if filename in database:
         return {
-            'flags': convert_paths(remove_compile_flags(database[filename])).split(' ')
+            'flags': convert_paths(remove_compile_flags(database[filename])).split(' '),
+            'override_filename': filename
         }
+    print('no flags for {0}'.format(filename))
     return {}
 
 

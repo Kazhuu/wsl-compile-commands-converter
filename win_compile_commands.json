@@ -1,0 +1,7 @@
+[
+  {
+    "directory": "C:/dev/product/product/board/core0/build/make-ninjawin",
+    "command": "C:\\tools\\mingw64\\8.1.0\\bin\\gcc.exe -DFLASH_DISK_1_MOUNT_PATH=\\\"flash1\\\" -DFLASH_DISK_MOUNT_PATH=\\\"flash0\\\" -DRAM_DISK_MOUNT_PATH=\\\"tmp\\\" -DVBOOT_FLASH_LAYOUT -DHOOT_FS_DEFAULT_PATH=\\\"C:/dev/product/product/board/core0/build/make-ninjawin/fs\\\" -D__DVPS__ -IC:/dev/product/product/board/core0/../../../sw/firmware -IC:/ProgramData/chocolatey/lib/winpcap-developers-pack/tools/WpdPack/Include -IC:/dev/product/ext/cc/include -IC:/dev/product/ext/hal/include -IC:/dev/product/ext/hal/sw -IC:/dev/product/ext/hal/sw/hal -IC:/dev/product/ext/hal/sw/hal/fs/sim -IC:/dev/product/ext/hal/sw/hal/fs/sim/hal/fs/../.. -isystem C:/tools/boost_1_62_0 -isystem C:/dev/product/ext/googletest/googlemock/include -isystem C:/dev/product/ext/googletest/googletest/include   -Wall -Wno-stringop-truncation -Werror  -DTARGET_LITTLE_ENDIAN=1234  -g  -Og -fdata-sections -ffunction-sections -g3  -Wno-psabi -Wno-error=parentheses -Wno-parentheses    -o ext\\hal\\build\\sw\\hal\\fs\\sim\\hal\\fs\\CMakeFiles\\FSSim.dir\\src\\halFs.c.obj   -c C:\\dev\\product\\ext\\hal\\sw\\hal\\fs\\sim\\hal\\fs\\src\\halFs.c",
+    "file": "C:\\dev\\product\\ext\\hal\\sw\\hal\\fs\\sim\\hal\\fs\\src\\halFs.c"
+  }
+]
