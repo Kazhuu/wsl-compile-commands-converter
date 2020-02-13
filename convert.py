@@ -3,6 +3,19 @@ import re
 import json
 import argparse
 
+"""
+Script to convert already existing compile_commands.json compile database with
+Windows paths to use WSL compatible paths instead. This allows Vim usage on WSL
+side but project code to be compiled on Windows side with Windows tools.
+
+Note that converting big compile_commands.json file will be slow.
+
+Usage:
+python convert.py win_compile_commands.json
+
+This will convert paths in the given file and write output to
+compile_commands.json file.
+"""
 
 def convert_paths(command):
     path_pattern = r'(?:(?<=[I| |"])|^)(\w+:?(?:[\\|\/]+[\w\.-]+)+)'

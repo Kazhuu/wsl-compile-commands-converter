@@ -4,7 +4,12 @@ import json
 import os
 
 """
-Works but is way too slow with big project/compile_commands.json file.
+Work in progress to try use Vim's YouCompleteMe plugin .ymc_extra_conf.py file
+to use compile_commands.json file with Windows paths. Behind the scenes paths
+are converted using WSL tool called wslpath on the fly.
+
+Note that this approach is not well suited for big projects because converting
+paths with wslpath tool is very slow.
 """
 
 COMPILE_COMMANDS_JSON_FILENAME = 'win_compile_commands.json'

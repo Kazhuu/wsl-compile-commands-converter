@@ -1,2 +1,4 @@
-# wsl-ycm-extra-conf
-Windows Subsystem for Linux (WSL) YouCompleteMe .ymc_extra_conf.py to work with paths between WSL and Windows
+# wsl-compile-commands-converter
+Convert compile_commands.json with Windows paths to use Windows Subsystem for
+Linux (WSL) compatible paths. Helpful when project is compiled using Windows
+tools and editing source code happens on WSL side using Vim.
