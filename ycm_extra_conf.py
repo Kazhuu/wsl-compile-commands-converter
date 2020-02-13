@@ -3,6 +3,9 @@ import re
 import json
 import os
 
+"""
+Works but is way too slow with big project/compile_commands.json file.
+"""
 
 COMPILE_COMMANDS_JSON_FILENAME = 'win_compile_commands.json'
 SOURCE_EXTENSIONS = ['.cpp', '.cxx', '.cc', '.c', '.m', '.mm']

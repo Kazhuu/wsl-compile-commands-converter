@@ -1,6 +1,7 @@
 import subprocess
 import re
 import json
+import argparse
 
 
 def convert_paths(command):
@@ -18,8 +19,11 @@ def wsl_path(windows_path):
 
 
 def main():
+    parser = argparse.ArgumentParser(description='Convert given compile_commands.json with Windows paths to Windows Subsystem for Linux (WSL) compatible paths')
+    parser.add_argument('compile_commands', help='compile_commands.json file with Windows paths')
+    args = parser.parse_args()
     database = None
-    with open('win_compile_commands.json', 'r') as input_file:
+    with open(args.compile_commands, 'r') as input_file:
         database = json.load(input_file)
     length = len(database)
     for index, command in enumerate(database):
