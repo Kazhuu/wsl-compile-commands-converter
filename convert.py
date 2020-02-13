@@ -3,9 +3,8 @@ import re
 import json
 
 
-
 def convert_paths(command):
-    path_pattern = r'[I| |"](\w+:?(?:[\\|\/]+[\w\.-]+)+)'
+    path_pattern = r'(?:(?<=[I| |"])|^)(\w+:?(?:[\\|\/]+[\w\.-]+)+)'
     return re.sub(path_pattern, replace_path, command)
 
 
@@ -14,19 +13,22 @@ def replace_path(path):
 
 
 def wsl_path(windows_path):
-    completed_process = subprocess.run('wslpath -a {0}'.format(windows_path), shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    print(windows_path)
+    completed_process = subprocess.run(['wslpath', '-a', windows_path], check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     return completed_process.stdout.decode('ascii').strip()
 
 
 def main():
     database = None
+    with open('win_compile_commands.json', 'r') as input_file:
+        database = json.load(input_file)
+    length = len(database)
+    for index, command in enumerate(database):
+        command['command'] = convert_paths(command['command'])
+        command['directory'] = wsl_path(command['directory'])
+        command['file'] = wsl_path(command['file'])
+        print('{0}/{1}'.format(index + 1, length))
     with open('compile_commands.json', 'w') as output_file:
-        with open('win_compile_commands.json', 'r') as input_file:
-            for line in input_file:
-                line = convert_paths(line.strip())
-                print(line)
-                output_file.write(convert_paths(line))
+        json.dump(database, output_file, indent=2)
 
 
 if __name__ == '__main__':
