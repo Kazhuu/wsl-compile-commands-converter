@@ -8,12 +8,12 @@ Work in progress to try use Vim's YouCompleteMe plugin .ymc_extra_conf.py file
 to use compile_commands.json file with Windows paths. Behind the scenes paths
 are converted using WSL tool called wslpath on the fly.
 
-Note that this approach is not well suited for big projects because converting
-paths with wslpath tool is very slow.
+NOTE: Not working yet.
 """
 
 COMPILE_COMMANDS_JSON_FILENAME = 'win_compile_commands.json'
 SOURCE_EXTENSIONS = ['.cpp', '.cxx', '.cc', '.c', '.m', '.mm']
+path_cache = {}
 
 def is_header_file(filename):
     extension = os.path.splitext(filename)[1]
@@ -49,18 +49,32 @@ def remove_compile_flags(command):
     return command
 
 
+def convert_drive_paths(path):
+    drive_path = r'(?:(?<=[I| |"])|^)(\w+:[\\\/]+)'
+    return re.sub(drive_path, replace_path, path)
+
+
+def convert_slashes(path):
+    slash_pattern = r'(?<=\w)(\\+)(?=\w)'
+    return re.sub(slash_pattern, '/', path)
+
+
+def convert_paths(string):
+    string = convert_slashes(string)
+    return convert_drive_paths(string)
+
+
 def replace_path(path):
     return wsl_path(path.group(1))
 
 
-def convert_paths(command):
-    path_pattern = r'((\w\:|)?[\/\\][^\s]+)'
-    return re.sub(path_pattern, replace_path, command)
-
-
 def wsl_path(windows_path):
-    completed_process = subprocess.run(['wslpath', '-a', windows_path], check=True, stdout=subprocess.PIPE)
-    return completed_process.stdout.decode('ascii').strip()
+    wsl_path = path_cache.get(windows_path)
+    if not wsl_path:
+        completed_process = subprocess.run(['wslpath', '-a', windows_path], check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        wsl_path = completed_process.stdout.decode('ascii').strip()
+        path_cache[windows_path] = wsl_path
+    return wsl_path
 
 
 def Settings(**kwargs):
