@@ -15,13 +15,13 @@ paths with wslpath tool is very slow.
 COMPILE_COMMANDS_JSON_FILENAME = 'win_compile_commands.json'
 SOURCE_EXTENSIONS = ['.cpp', '.cxx', '.cc', '.c', '.m', '.mm']
 
-def IsHeaderFile(filename):
+def is_header_file(filename):
     extension = os.path.splitext(filename)[1]
     return extension in ['.h', '.hxx', '.hpp', '.hh']
 
 
 def find_corresponding_source_file(filename):
-    if IsHeaderFile(filename):
+    if is_header_file(filename):
         basename = os.path.splitext(filename)[0]
         for extension in SOURCE_EXTENSIONS:
             replacement_file = basename + extension
