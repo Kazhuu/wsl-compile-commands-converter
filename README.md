@@ -39,18 +39,24 @@ This repository contains `convert.py` Python script which can be feed with
 using `wslpath` tool and output `compile_commands.json` file with corrected
 paths.
 
+## Requirements
+
+Tested on WSL installed Ubuntu. Tested and developed with Python 3.6. Hopefully
+works with later versions too. PR's are welcome if issues are found.
+
 ## How To Use
 
-Make CMake output `compile_commands.json` file by providing flag
+Make Windows installed CMake output `compile_commands.json` file by providing flag
 `-DCMAKE_EXPORT_COMPILE_COMMANDS=1` on command line or edit CMakeLists.txt to
 contain line `set(CMAKE_EXPORT_COMPILE_COMMANDS ON)`. After that CMake will
 output file in somewhere in it's subdirectories in the build folder.
 
-After this symlink this project's `convert.py` file to your project root where you
-want to use it or hard code the path to it when calling Python. It's important
-to know that script will write compile_commands.json to current directory where
-script is executed. So make sure you execute it on your project root directory. Invoke
-conversion with following:
+After this on WSL side symlink this project's `convert.py` file to your project
+root where you want to use it or hard code the path to it when calling Python.
+It's important to know that script will write `compile_commands.json` to current
+directory where script is executed and script need to be executed on WSL side.
+So make sure you execute it on your project root directory. Invoke conversion
+with following:
 ```
 python convert.py path-to-build-folder/compile_commands.json
 ```
