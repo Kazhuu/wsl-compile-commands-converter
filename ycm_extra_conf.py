@@ -33,10 +33,10 @@ def find_corresponding_source_file(filename):
 def read_compile_commands(filename):
     database = None
     with open(COMPILE_COMMANDS_JSON_FILENAME, 'r') as compile_commands:
-        database = json.loads(compile_commands.read())
+        database = json.load(compile_commands)
     result = {}
     for data in database:
-        filename = wsl_path(data['file'])
+        filename = convert_paths(data['file'])
         result[filename] = data['command']
     return result
 
@@ -74,6 +74,7 @@ def wsl_path(windows_path):
         completed_process = subprocess.run(['wslpath', '-a', windows_path], check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         wsl_path = completed_process.stdout.decode('ascii').strip()
         path_cache[windows_path] = wsl_path
+        print(windows_path)
     return wsl_path
 
 
