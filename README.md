@@ -68,13 +68,3 @@ For example my choice was to use Vim's plugin YouCompleteMe autocompletion engin
 will automatically read `compile_commands.json` file from your project root.
 When codebase changes you need to execute Python script again. In this case you
 can provide Vim keybinding to do so without leaving your editor.
-
-## Improvements
-
-For Vim's plugin YouCompleteMe provide `.ycm_extra_conf.py` script which will do
-conversion automatically on the fly. Read more about it
-[here](https://github.com/ycm-core/YouCompleteMe#option-2-provide-the-flags-manually).
-
-There is attempt of this in this repo called `ycm_extra_conf.py` but it doesn't
-fully work at the moment. It's able to parse flags and return them with
-corrected paths but for some files it raises exceptions.
