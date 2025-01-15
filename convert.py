@@ -57,6 +57,8 @@ def main():
         command['command'] = convert_paths(command['command'])
         command['directory'] = convert_paths(command['directory'])
         command['file'] = convert_paths(command['file'])
+        if 'output' in command:
+            command['output'] = convert_paths(command['output'])
         print('{0}/{1}: {2}'.format(index + 1, length, command['file']))
     with open('compile_commands.json', 'w') as output_file:
         json.dump(database, output_file, indent=2)
